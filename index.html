@@ -35,7 +35,7 @@
 
             // Get the active worksheet
             const sheet = workbook.getWorksheet(1);
-            const rows = sheet.getRows(3, 16-2);
+            const rows = sheet.getRows(10, 167-9);
 
             const workers = new Set();
             rows.forEach(r=>workers.add(r.getCell(3).text));
@@ -53,7 +53,7 @@
             new_sheet.addRow(['Worker','Time1', 'Time2']);
 
             workers.forEach(w=>{
-                const wr = rows.filter(r=>r.getCell(3)==w); 
+                const wr = rows.filter(r=>r.getCell(5)==w); 
                 let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
                 output+='<tr>';
                 wr.forEach(r=>{
