@@ -10,7 +10,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <p>version: 5</p>
+        <p>version: 6</p>
         <input type="file" id="excelFileInput">
         <div id="output"></div>
 
@@ -39,7 +39,7 @@
             // Get the active worksheet
             const sheet = workbook.getWorksheet(1);
 
-            const num_rows = sheet.rowCount - start_row;
+            const num_rows = sheet.rowCount - start_row + 1;
 
             const rows = sheet.getRows(start_row, num_rows);
 
