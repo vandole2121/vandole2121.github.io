@@ -10,7 +10,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <p>version: 1</p>
+        <p>version: 2</p>
         <input type="file" id="excelFileInput">
         <div id="output"></div>
 
@@ -54,7 +54,7 @@
             new_sheet.addRow(['Worker','Time1', 'Time2']);
 
             workers.forEach(w=>{
-                const wr = rows.filter(r=>r.getCell(5)==w); 
+                const wr = rows.filter(r=>r.getCell(3)==w); 
                 let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
                 output+='<tr>';
                 wr.forEach(r=>{
@@ -64,7 +64,7 @@
                     if (r.getCell(2).value == '2')
                        tott = 1;
  
-                    const m = Moment(r.getCell(r4).value.toISOString().substring(11,16), "HH:mm");
+                    const m = Moment(r.getCell(4).value.toISOString().substring(11,16), "HH:mm");
                     tot[tott].add(m.hours(), 'hours');
                     tot[tott].add(m.minutes(), 'minutes');
                 });
