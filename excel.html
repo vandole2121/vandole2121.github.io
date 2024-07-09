@@ -16,6 +16,8 @@
 
         <script>
 
+        const start_row = 3;
+
         const Moment = moment;
 
         document.getElementById('excelFileInput').addEventListener('change', handleFileUpload);
@@ -36,7 +38,10 @@
 
             // Get the active worksheet
             const sheet = workbook.getWorksheet(1);
-            const rows = sheet.getRows(10, 167-9);
+
+            const num_rows = sheet.rowCount - start_row;
+
+            const rows = sheet.getRows(start_row, num_rows);
 
             const workers = new Set();
             rows.forEach(r=>workers.add(r.getCell(3).text));
