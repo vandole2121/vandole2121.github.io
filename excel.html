@@ -58,7 +58,7 @@
                 let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
                 output+='<tr>';
                 wr.forEach(r=>{
-                    const tott = 0;
+                    let tott = 0;
                     if (r.getCell(2).value == '1')
                        tott = 0;
                     if (r.getCell(2).value == '2')
