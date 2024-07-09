@@ -57,20 +57,15 @@
                 let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
                 output+='<tr>';
                 wr.forEach(r=>{
-                    if (r.getCell(4).value != null) {
-                        const m = Moment(r.getCell(4).value.toISOString().substring(11,16), "HH:mm");
-                        // console.log(m.hours(), ":", m.minutes());
-                        tot[0].add(m.hours(), 'hours');
-                        tot[0].add(m.minutes(), 'minutes');
-                        // console.log("total1 = ", tot1.format("HH:mm"));
-                    }
-                    if (r.getCell(5).value != null) {
-                        const m = Moment(r.getCell(5).value.toISOString().substring(11,16), "HH:mm");
-                        // console.log(m.hours(), ":", m.minutes());
-                        tot[1].add(m.hours(), 'hours');
-                        tot[1].add(m.minutes(), 'minutes');
-                        // console.log("total2 = ", tot2.format("HH:mm"));
-                    }
+                    const tott = 0;
+                    if (r.getCell(2).value == '1')
+                       tott = 0;
+                    if (r.getCell(2).value == '2')
+                       tott = 1;
+ 
+                    const m = Moment(r.getCell(r4).value.toISOString().substring(11,16), "HH:mm");
+                    tot[tott].add(m.hours(), 'hours');
+                    tot[tott].add(m.minutes(), 'minutes');
                 });
                 // console.log("Worker:", w, " => time1: ", tot1.format("HH:mm"), ", time2: ", tot2.format("HH:mm"));
                 output += `<td>${w} </td> <td>${tot[0].format("HH:mm")}</td><td>${tot[1].format("HH:mm")}</td>`;
