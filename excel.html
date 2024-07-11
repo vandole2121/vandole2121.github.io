@@ -10,13 +10,19 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <p>version: 6</p>
+        <p>version: 9</p>
         <input type="file" id="excelFileInput">
         <div id="output"></div>
 
         <script>
 
-        const start_row = 3;
+        const start_row = 10;
+        const delete_from_end_row = 5;
+ 
+        const col_time = 4;
+        const col_worker = 2;
+        const col_param = 16;
+        const col_date = 1;
 
         const Moment = moment;
 
@@ -39,45 +45,58 @@
             // Get the active worksheet
             const sheet = workbook.getWorksheet(1);
 
-            const num_rows = sheet.rowCount - start_row + 1;
+            const num_rows = sheet.rowCount - start_row + 1 - delete_from_end_row;
 
             const rows = sheet.getRows(start_row, num_rows);
 
-            const workers = new Set();
-            rows.forEach(r=>workers.add(r.getCell(3).text));
+            const dates_set = new Set();
+            rows.forEach(r=>dates_set.add(r.getCell(col_date).text));
+            console.log(dates_set);
+
+            const workers_set = new Set();
+            rows.forEach(r=>workers_set.add(r.getCell(col_worker).text));
 
             let output = '<br>';
 
             output += `<table class="border-separate border-spacing-2 border border-slate-400">
 <thead>
+<th>Date</th>
 <th>Worker</th>
 <th>Time 1</th>
 <th>Time 2</th>
 </thead>
 <tbody>
 `;
-            new_sheet.addRow(['Worker','Time1', 'Time2']);
+            new_sheet.addRow(['Date', 'Worker','Time1', 'Time2']);
 
-            workers.forEach(w=>{
-                const wr = rows.filter(r=>r.getCell(3)==w); 
-                let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
-                output+='<tr>';
-                wr.forEach(r=>{
-                    let tott = 0;
-                    if (r.getCell(2).value == '1')
-                       tott = 0;
-                    if (r.getCell(2).value == '2')
-                       tott = 1;
- 
-                    const m = Moment(r.getCell(4).value.toISOString().substring(11,16), "HH:mm");
-                    tot[tott].add(m.hours(), 'hours');
-                    tot[tott].add(m.minutes(), 'minutes');
-                });
-                // console.log("Worker:", w, " => time1: ", tot1.format("HH:mm"), ", time2: ", tot2.format("HH:mm"));
-                output += `<td>${w} </td> <td>${tot[0].format("HH:mm")}</td><td>${tot[1].format("HH:mm")}</td>`;
-                output+='</tr>';
-                new_sheet.addRow([w, tot[0].format("HH:mm"), tot[1].format("HH:mm")]);
+            dates_set.forEach(d=>{
+              const date_rows = rows.filter(r=>r.getCell(col_date).text==d);
+              console.log(d, date_rows.length);
+              workers_set.forEach(w=>{
+                  const worker_rows = date_rows.filter(r=>r.getCell(col_worker)==w); 
+                  if (worker_rows.length) {
+                    let tot = [new Moment('00:00', 'HH:mm'), new Moment('00:00', 'HH:mm')];
+                    output+='<tr>';
+                    worker_rows.forEach(r=>{
+                        let tott = 0;
+                        if (r.getCell(col_param).value.sear == 'Anpassungen')
+                           tott = 0;
+     
+                        const m = Moment(r.getCell(col_time).value.toISOString().substring(11,16), "HH:mm");
+                        tot[tott].add(m.hours(), 'hours');
+                        tot[tott].add(m.minutes(), 'minutes');
+                    });
+                    // console.log("Worker:", w, " => time1: ", tot1.format("HH:mm"), ", time2: ", tot2.format("HH:mm"));
+                    const date_formatted = Moment(d).format("DD/MM/YYYY")
+                    output += `<td>${date_formatted} </td><td>${w} </td> <td>${tot[0].format("HH:mm")}</td><td>${tot[1].format("HH:mm")}</td>`;
+                    output+='</tr>';
+                    new_sheet.addRow([date_formatted, w, tot[0].format("HH:mm"), tot[1].format("HH:mm")]);
+                  }
             });
+
+           });
+
+
 
             output += `</tbody>
 
@@ -98,4 +117,3 @@
         </script>
     </body>
 </html>
-
